@@ -207,3 +207,4 @@ marimo/_lsp/
 __marimo__/
 /raw
 /processed
+debug_kpi_calc.py
