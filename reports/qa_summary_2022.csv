@@ -1,8 +1,0 @@
-,records_removed,percentage_of_total
-invalid_trip_duration,32035,0.08078202752071069
-negative_cost_values,255777,0.6449878149887566
-outlier_trip_duration,592013,1.4928675030004213
-outlier_trip_speed,3182,0.008023986626218243
-trip_outside_year,1146,0.002889845591969235
-zero_or_negative_trip_distance,574059,1.4475932553929034
-zero_passenger_count,763344,1.924909505720911
