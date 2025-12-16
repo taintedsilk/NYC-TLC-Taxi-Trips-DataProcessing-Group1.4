@@ -45,3 +45,32 @@ Dự án này thực hiện quy trình **ETL (Extract, Transform, Load)** hoàn 
 
 ```bash
 pip install -r requirements.txt
+
+---
+
+## 5. Hướng dẫn Thực thi Quy trình (Workflow)
+
+Quy trình được chia thành 5 giai đoạn chính. Vui lòng chạy các Notebooks theo thứ tự sau để đảm bảo dữ liệu được xử lý tuần tự:
+
+| Giai đoạn | Tên Notebook/Script | Mục tiêu Chính |
+| :--- | :--- | :--- |
+| **1. Tải về** | `1_download.ipynb` | Tải về dữ liệu thô 12 tháng và file lookup khu vực. |
+| **2. Làm sạch (QA)** | `2_process.ipynb` | Áp dụng các quy tắc làm sạch, tính toán thời lượng/tốc độ cơ bản, và lưu file sạch từng tháng. |
+| **3. Hợp nhất & KPI** | `3_calculate_kpi.ipynb` | Hợp nhất dữ liệu đã làm sạch (tạo `all_cleaned_yellow_tripdata_2022.parquet`) và tính toán KPI cơ bản. |
+| **4. KPI Chi tiết & Trực quan** | `3.1_extra_kpis_compat.ipynb`, `4-1_add_some_kpi_need_for_visualization (1).ipynb`, `4_visualization.ipynb` | Tính toán các KPI chi tiết theo giờ/khu vực (Heatmap data, Median Speed) và tạo các biểu đồ trực quan hóa. |
+| **5. Phân tích Nâng cao** | `04_advanced_analysis.py` | **(Chạy bằng lệnh Terminal)** Thực hiện phân tích Z-score theo bối cảnh để tạo số liệu báo cáo về Outliers. |
+
+### Thực thi Giai đoạn 5 (Phân tích Nâng cao)
+
+Sau khi hoàn thành các Notebook (Giai đoạn 1-4) và file dữ liệu hợp nhất đã được tạo, bạn chạy script phân tích cuối cùng bằng lệnh Terminal:
+
+```bash
+python 4_advanced_analysis.ipynb
+
+## 6. Ghi chú về Tính Tái Tạo (Reproducibility)
+
+### Công bố Seed (Reproducibility Statement)
+
+Mã nguồn trong file `04_advanced_analysis.py` và toàn bộ quy trình xử lý dữ liệu bằng Pandas **chỉ sử dụng** các phép tính thống kê hoàn toàn xác định (Deterministic) như Trung bình, Độ lệch chuẩn, và Z-score.
+
+**Mã nguồn không chứa bất kỳ hàm ngẫu nhiên nào.** Do đó, kết quả đầu ra sẽ luôn đồng nhất khi chạy lại trên cùng một tập dữ liệu đầu vào. **Không cần công bố giá trị seed.**
