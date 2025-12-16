@@ -45,7 +45,7 @@ Dự án này thực hiện quy trình **ETL (Extract, Transform, Load)** hoàn 
 
 ```bash
 pip install -r requirements.txt
-
+```
 ---
 
 ## 5. Hướng dẫn Thực thi Quy trình (Workflow)
@@ -66,6 +66,7 @@ Sau khi hoàn thành các Notebook (Giai đoạn 1-4) và file dữ liệu hợp
 
 ```bash
 python 4_advanced_analysis.ipynb
+```
 
 ## 6. Ghi chú về Tính Tái Tạo (Reproducibility)
 
