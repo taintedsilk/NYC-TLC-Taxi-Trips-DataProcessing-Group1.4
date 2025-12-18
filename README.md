@@ -1,77 +1,61 @@
 # NYC-TLC-Taxi-Trips-DataProcessing-Group1.4
 
-## Mục lục
-1.  Tổng quan Dự án
-2.  Công cụ và Môi trường
-3.  Cấu trúc Thư mục
-4.  Cài đặt Dependencies
-5.  Hướng dẫn Thực thi Quy trình (Workflow)
-6.  Ghi chú về Tính Tái Tạo (Reproducibility)
-
----
-
 ## 1. Tổng quan Dự án
-
-Dự án này thực hiện quy trình **ETL (Extract, Transform, Load)** hoàn chỉnh cho dữ liệu chuyến đi Taxi Vàng (Yellow Taxi) của NYC TLC trong năm 2022.
-
-**Mục tiêu chính:**
-1.  **Làm sạch & Hợp nhất:** Tải về và hợp nhất 12 file dữ liệu thô hàng tháng. Áp dụng các kiểm tra QA nghiêm ngặt trên `trip_duration`, `trip_distance`, `fare_amount`, và `zone_codes`.
-2.  **Tính toán KPI:** Tính toán các chỉ số cơ bản và tổng hợp các KPI chi tiết theo thời gian/khu vực (ví dụ: Tốc độ Trung vị theo giờ, Top Zones).
-3.  **Phân tích Nâng cao:** Thực hiện phân tích Z-score theo bối cảnh (Hour x Day of Week) để xác định các chuyến đi bất thường về tốc độ/thời lượng.
+Dự án thực hiện xây dựng hệ thống **ETL Pipeline** toàn diện cho dữ liệu Taxi Vàng (Yellow Taxi) của NYC TLC năm 2022. Quy trình đi từ nạp dữ liệu thô, làm sạch/chuẩn hóa đến tổng hợp KPI và dự báo nâng cao bằng mô hình SARIMA.
 
 ## 2. Công cụ và Môi trường
-
-| Loại | Công cụ | Mục đích |
-| :--- | :--- | :--- |
-| **Ngôn ngữ** | Python 3.x | Ngôn ngữ lập trình chính. |
-| **Thư viện** | Pandas, NumPy | Xử lý dữ liệu in-memory. |
-| **Hỗ trợ I/O** | Pyarrow | Đọc và ghi dữ liệu ở định dạng Parquet. |
-| **Tính toán** | Tdigest | Hỗ trợ tính toán chính xác các bách phân vị (percentiles/median). |
-| **Môi trường** | Jupyter Notebooks / Python Script | Môi trường phát triển và thực thi code. |
-
-## 3. Cấu trúc Thư mục
-
-| Thư mục/File | Mục đích |
+| Thành phần | Công cụ sử dụng |
 | :--- | :--- |
-| `raw/` | Chứa dữ liệu thô ban đầu (file Parquet 12 tháng) và file lookup khu vực (`taxi_zone_lookup.csv`). |
-| `processed/` | **ĐẦU RA:** Chứa các file dữ liệu trung gian và file hợp nhất cuối cùng (`all_cleaned_yellow_tripdata_2022.parquet`). |
-| `src/` | Chứa các Jupyter Notebooks (.ipynb) thực hiện các bước trong quy trình. |
-| `04_advanced_analysis.py` | Script Python chạy phân tích Z-score nâng cao, độc lập với Notebook. |
-| `requirements.txt` | Liệt kê tất cả các thư viện Python cần thiết. |
+| **Ngôn ngữ** | Python 3.x |
+| **Thư viện ETL** | Pandas, NumPy, Pyarrow (xử lý định dạng Parquet) |
+| **Phân tích/Dự báo** | Tdigest (P95), Statsmodels (SARIMA), XGBoost (Profitability) |
+| **Trực quan hóa** | Matplotlib, Seaborn |
+
+## 3. Cấu trúc Thư mục (Theo yêu cầu đề bài)
+| Thư mục/File | Mô tả nội dung |
+| :--- | :--- |
+| `raw/` | Chứa dữ liệu thô (.parquet 12 tháng) và `taxi_zone_lookup.csv`. |
+| `processed/` | Chứa dữ liệu sau khi làm sạch (QA) và các bảng tổng hợp KPI. |
+| `reports/` | Chứa các báo cáo kỹ thuật (`report-Group1.4.pdf`) và kết luận. |
+| `src/` | Chứa toàn bộ các Jupyter Notebooks (.ipynb) thực hiện quy trình. |
+| `README.md` | Hướng dẫn chạy lại toàn bộ quy trình. |
+| `requirements.txt` | Danh sách thư viện và phiên bản cần thiết. |
 
 ## 4. Cài đặt Dependencies
-
-Để chạy lại mã nguồn, bạn cần có Python 3.x. Sử dụng `pip` để cài đặt tất cả các thư viện cần thiết, được liệt kê trong `requirements.txt`:
-
+Để cài đặt môi trường, mở Terminal tại thư mục gốc và chạy câu lệnh:
 ```bash
 pip install -r requirements.txt
 ```
 ---
+## Hướng dẫn Thực thi Quy trình (Workflow Pipeline)
+Vui lòng chạy các tệp Notebook trong thư mục src/ theo đúng trình tự logic sau:
 
-## 5. Hướng dẫn Thực thi Quy trình (Workflow)
+Giai đoạn 1: Pipeline Dữ liệu (ETL & Trực quan cơ bản)
+src/1_download.ipynb: Tải dữ liệu thô từ nguồn NYC TLC.
 
-Quy trình được chia thành 5 giai đoạn chính. Vui lòng chạy các Notebooks theo thứ tự sau để đảm bảo dữ liệu được xử lý tuần tự:
+src/2_process.ipynb: Làm sạch dữ liệu và thực hiện kiểm tra QA.
 
-| Giai đoạn | Tên Notebook/Script | Mục tiêu Chính |
-| :--- | :--- | :--- |
-| **1. Tải về** | `1_download.ipynb` | Tải về dữ liệu thô 12 tháng và file lookup khu vực. |
-| **2. Làm sạch (QA)** | `2_process.ipynb` | Áp dụng các quy tắc làm sạch, tính toán thời lượng/tốc độ cơ bản, và lưu file sạch từng tháng. |
-| **3. Hợp nhất & KPI** | `3_calculate_kpi.ipynb` | Hợp nhất dữ liệu đã làm sạch (tạo `all_cleaned_yellow_tripdata_2022.parquet`) và tính toán KPI cơ bản. |
-| **4. KPI Chi tiết & Trực quan** | `3.1_extra_kpis_compat.ipynb`, `4-1_add_some_kpi_need_for_visualization (1).ipynb`, `4_visualization.ipynb` | Tính toán các KPI chi tiết theo giờ/khu vực (Heatmap data, Median Speed) và tạo các biểu đồ trực quan hóa. |
-| **5. Phân tích Nâng cao** | `04_advanced_analysis.py` | **(Chạy bằng lệnh Terminal)** Thực hiện phân tích Z-score theo bối cảnh để tạo số liệu báo cáo về Outliers. |
+src/3_calculate_kpi.ipynb: Hợp nhất dữ liệu và tính toán các chỉ số KPI cơ bản.
 
-### Thực thi Giai đoạn 5 (Phân tích Nâng cao)
+src/3.1_extra_kpis_compat.ipynb: Xử lý bổ sung các KPI tương thích.
 
-Sau khi hoàn thành các Notebook (Giai đoạn 1-4) và file dữ liệu hợp nhất đã được tạo, bạn chạy script phân tích cuối cùng bằng lệnh Terminal:
+src/4_visualization.ipynb: Trực quan hóa dữ liệu tổng thể (Heatmap, P95 Trip Duration).
 
-```bash
-python 4_advanced_analysis.ipynb
-```
+src/4_new_visualization.ipynb: Các phân tích biểu đồ mở rộng.
+
+src/4-1_add_some_kpi_need_for_visualization.ipynb: Bổ sung các chỉ số cần thiết cho đồ thị.
+
+Giai đoạn 2: Phân tích Nâng cao & Mô hình Dự báo
+src/4_advanced_outlier_detection.ipynb: Sử dụng kỹ thuật thống kê nâng cao để phát hiện và xử lý điểm bất thường (Outliers).
+
+src/5_profitability_model.ipynb: Phân tích mô hình lợi nhuận sử dụng XGBoost.
+
+src/6_demand_prediction.ipynb: Dự báo nhu cầu khách hàng ngắn hạn.
+
+src/7_demand_prediction_with_sarima.ipynb: Dự báo chuỗi thời gian nâng cao bằng mô hình SARIMA.
 
 ## 6. Ghi chú về Tính Tái Tạo (Reproducibility)
+Công bố Seed (Reproducibility Statement)
+Mã nguồn trong file 4_advanced_outlier_detection.ipynb và toàn bộ quy trình xử lý dữ liệu bằng Pandas chỉ sử dụng các phép tính thống kê hoàn toàn xác định (Deterministic) như Trung bình, Độ lệch chuẩn, và Z-score.
 
-### Công bố Seed (Reproducibility Statement)
-
-Mã nguồn trong file `04_advanced_analysis.py` và toàn bộ quy trình xử lý dữ liệu bằng Pandas **chỉ sử dụng** các phép tính thống kê hoàn toàn xác định (Deterministic) như Trung bình, Độ lệch chuẩn, và Z-score.
-
-**Mã nguồn không chứa bất kỳ hàm ngẫu nhiên nào.** Do đó, kết quả đầu ra sẽ luôn đồng nhất khi chạy lại trên cùng một tập dữ liệu đầu vào. **Không cần công bố giá trị seed.**
+Mã nguồn không chứa bất kỳ hàm ngẫu nhiên nào. Do đó, kết quả đầu ra sẽ luôn đồng nhất khi chạy lại trên cùng một tập dữ liệu đầu vào. Không cần công bố giá trị seed.
