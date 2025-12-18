@@ -7,7 +7,7 @@ Dự án thực hiện xây dựng hệ thống **ETL Pipeline** toàn diện ch
 | Thành phần | Công cụ sử dụng |
 | :--- | :--- |
 | **Ngôn ngữ** | Python 3.x |
-| **Thư viện ETL** | Pandas, NumPy, Pyarrow (xử lý định dạng Parquet) |
+| **Thư viện ETL** | Pandas, NumPy, Pyarrow |
 | **Phân tích/Dự báo** | Tdigest (P95), Statsmodels (SARIMA), XGBoost (Profitability) |
 | **Trực quan hóa** | Matplotlib, Seaborn |
 
@@ -27,15 +27,15 @@ Dự án thực hiện xây dựng hệ thống **ETL Pipeline** toàn diện ch
 pip install -r requirements.txt
 ```
 ---
-## Hướng dẫn Thực thi Quy trình (Workflow Pipeline)
+## 5. Hướng dẫn Thực thi Quy trình (Workflow Pipeline)
 Vui lòng chạy các tệp Notebook trong thư mục src/ theo đúng trình tự logic sau:
 
 Giai đoạn 1: Pipeline Dữ liệu (ETL & Trực quan cơ bản)
 src/1_download.ipynb: Tải dữ liệu thô từ nguồn NYC TLC.
 
-src/2_process.ipynb: Làm sạch dữ liệu và thực hiện kiểm tra QA.
+src/2_process.ipynb: Làm sạch dữ liệu và thực hiện kiểm tra QA (Loại bỏ quãng đường ≤ 0, giá tiền âm, tốc độ bất thường).
 
-src/3_calculate_kpi.ipynb: Hợp nhất dữ liệu và tính toán các chỉ số KPI cơ bản.
+src/3_calculate_kpi.ipynb: Hợp nhất dữ liệu và tính toán các chỉ số KPI cơ bản (Doanh thu, Tốc độ trung vị, P95 Duration).
 
 src/3.1_extra_kpis_compat.ipynb: Xử lý bổ sung các KPI tương thích.
 
@@ -46,15 +46,15 @@ src/4_new_visualization.ipynb: Các phân tích biểu đồ mở rộng.
 src/4-1_add_some_kpi_need_for_visualization.ipynb: Bổ sung các chỉ số cần thiết cho đồ thị.
 
 Giai đoạn 2: Phân tích Nâng cao & Mô hình Dự báo
-src/4_advanced_outlier_detection.ipynb: Sử dụng kỹ thuật thống kê nâng cao để phát hiện và xử lý điểm bất thường (Outliers).
+src/4_advanced_outlier_detection.ipynb: Sử dụng kỹ thuật Contextual Z-Score để phát hiện và xử lý điểm bất thường.
 
 src/5_profitability_model.ipynb: Phân tích mô hình lợi nhuận sử dụng XGBoost.
 
 src/6_demand_prediction.ipynb: Dự báo nhu cầu khách hàng ngắn hạn.
 
-src/7_demand_prediction_with_sarima.ipynb: Dự báo chuỗi thời gian nâng cao bằng mô hình SARIMA.
+src/7_demand_prediction_with_sarima.ipynb: Dự báo chuỗi thời gian nâng cao bằng mô hình SARIMA (đạt MAPE ~5.29%).
 
-## 6. Ghi chú về Tính Tái Tạo (Reproducibility)
+6. Ghi chú về Tính Tái Tạo (Reproducibility)
 Công bố Seed (Reproducibility Statement)
 Mã nguồn trong file 4_advanced_outlier_detection.ipynb và toàn bộ quy trình xử lý dữ liệu bằng Pandas chỉ sử dụng các phép tính thống kê hoàn toàn xác định (Deterministic) như Trung bình, Độ lệch chuẩn, và Z-score.
 
