@@ -1,4 +1,15 @@
 pandas
+numpy
+requests
+matplotlib
+seaborn
+scikit-learn
 pyarrow
+<<<<<<< HEAD
 tdigest
 dask[complete]
+=======
+pmdarima
+xgboost
+joblib
+>>>>>>> 3ac9b73b611236b62d638cab96b357b0a9b56367
