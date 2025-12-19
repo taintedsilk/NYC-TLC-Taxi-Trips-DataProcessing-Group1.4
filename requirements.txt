@@ -1,4 +1,10 @@
 pandas
+numpy
+requests
+matplotlib
+seaborn
+scikit-learn
 pyarrow
-tdigest
-pyarrow
+pmdarima
+xgboost
+joblib
