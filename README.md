@@ -25,24 +25,17 @@ Dự án tận dụng hệ sinh thái Python hiện đại để tối ưu hóa 
 ## 3. Cấu trúc Thư mục (Chi tiết các tệp tin)
 Mã nguồn được phân tách rõ ràng theo từng giai đoạn của Pipeline để dễ dàng debug và bảo trì:
 
-| Thư mục/File | Nội dung chi tiết & Chức năng |
+| Directory/File | Detailed Content & Function |
 | :--- | :--- |
-| **`src/`** | **Bộ mã nguồn thực thi:** |
-| ├─ `1_download.ipynb` | Script tự động tải dữ liệu từ server NYC TLC. Kiểm tra mã trạng thái HTTP và xác thực tính toàn vẹn của tệp tin. |
-| ├─ `2_process.ipynb` | Chuyển đổi kiểu dữ liệu (Data Casting), xử lý các giá trị NaN bằng phương pháp nội suy hoặc loại bỏ tùy thuộc vào tỷ lệ thiếu hụt. |
-| ├─ `3_calculate_kpi.ipynb` | Tính toán các biến phái sinh: `trip_duration`, `average_speed`, `profit_per_minute`. |
-| ├─ `3.1_extra_kpis_compat.ipynb` | Chuẩn hóa cấu trúc dữ liệu (Schema matching) giữa các tháng để chuẩn bị cho việc gộp bảng quy mô lớn. |
-| ├─ `4_advanced_outlier_detection.ipynb` | Triển khai thuật toán **Contextual Z-Score** để tách biệt sai số hệ thống khỏi các hành vi thực tế. |
-| ├─ `4_visualization.ipynb` | Phân tích phân phối theo giờ (Hourly Distribution) và mật độ chuyến đi tại các khu vực Manhattan, Brooklyn, Queens. |
-| ├─ `4_new_visualization.ipynb` | Biểu đồ Radar và Boxplot so sánh sự khác biệt giữa các khung giờ cao điểm (Rush Hours) và giờ thấp điểm. |
-| ├─ `4-1_add_some_kpi_need_for_visualization.ipynb` | Tạo các bảng tóm tắt (Aggregated tables) để giảm tải cho quá trình render biểu đồ. |
-| ├─ `5_profitability_model.ipynb` | Xây dựng Pipeline Machine Learning đánh giá các yếu tố: Khoảng cách, thời gian, và mức độ tắc nghẽn ảnh hưởng đến thu nhập. |
-| ├─ `6_demand_prediction.ipynb` | Huấn luyện mô hình XGBoost với các Feature Engineering như: Ngày trong tuần, Giờ, Ngày lễ. |
-| └─ `7_demand_prediction_with_sarima.ipynb` | Tối ưu hóa các siêu tham số $(p, d, q)$ và $(P, D, Q, s)$ để đạt **MAPE ~5.29%**. |
-| **`raw/`** | Chứa dữ liệu thô ban đầu và file mapping vùng `taxi_zone_lookup.csv`. |
-| **`processed/`** | Dữ liệu sau khi làm sạch và tính toán KPI, được phân chia theo cấp độ Daily và Monthly. |
-| **`figures/`** | Toàn bộ ảnh kết quả, từ biểu đồ tương quan đến dự báo thực tế. |
-| **`reports/`** | Chứa báo cáo kỹ thuật chi tiết bằng PDF/Docx giải thích các phương pháp luận. |
+| **`src/`** | **Source Code:** |
+| ├─ `1_download.ipynb` | Parallel downloader for 2022 Yellow Taxi data and zone lookups using `ThreadPoolExecutor` [4]. |
+| ├─ `2_process.ipynb` | Deep data profiling and caching. Generates summaries for passengers, issues, fare differences, and null values [5]. |
+| ├─ `3_calculate_all_kpi.ipynb` | Optimized KPI calculation. Processes chunks to generate stats for heatmaps, speed curves, duration, and identifies top pickup zones [6]. |
+| ├─ `4_advanced_outlier_detection.ipynb` | Implements advanced cleaning using `dask` and `fastparquet` for large-scale outlier detection [7]. |
+| ├─ `4_visualization.ipynb` | Generates visualizations including Monthly Trips, Duration by Day of Week, Trip Density Heatmaps (Day vs Hour), and Speed Curves [8]. |
+| ├─ `5_profitability_model.ipynb` | **New:** XGBoost Regressor pipeline for profitability estimation. Includes feature importance analysis and evaluation metrics (MAE, RMSE, R2) [1]. |
+| ├─ `6_demand_prediction.ipynb` | **New:** Time-series analysis focusing on specific events (Holidays, Storms) and manual data correction (e.g., fixing 2022-09-18 data errors) [2]. |
+| ├─ `7_demand_prediction_with_sarima.ipynb` | **New:** SARIMA model for demand forecasting. Includes confidence interval plotting and rolling forecast validation [3]. |
 
 ## 4. Quy trình Tiền xử lý & Làm sạch (QA)
 Quy trình QA được thực hiện qua các bước lọc logic toán học cực kỳ chi tiết:
